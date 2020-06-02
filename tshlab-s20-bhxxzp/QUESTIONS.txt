@@ -1,0 +1,55 @@
+************
+Instructions
+************
+* This Questionnaire is intended to test your understanding of shell related concepts.
+* Each question carries 1 pt.
+* Replace the comments in the space after each question with your answer.
+* Answer the questions in 1-2 sentences.
+
+*********
+Questions
+*********
+
+After graduation, you joined an early-stage embedded systems startup that uses signals to trigger certain IoT functionalities.
+While dealing with a bug, you found code that uses a global linked list to store the status (running or reaped) of child processes in the system.
+Elements are being added or deleted in the linked list to keep track of jobs, even though the maximum number of child processes running concurrently is a constant.
+You also note that the linked list is being manipulated within both the signal handlers and the rest of the program alike, without any particular precautions.
+Having taken 1x-x13, you know this is a bad design.
+
+1. How will you explain to your teammates that this design is bad? (1 pt)
+
+Both the signal handlers and the rest program can manipulate the linked list without any particular precautions, which is not safe.
+If the handlers and program change the linked list at the same time, they might be a race between them. And the final result of linked list is random.
+Using the global variables to create the linked list is not safe either.
+
+After listening to your explanation, your teammates ask you a couple more questions regarding your new proposed solution:
+
+2. The shell is required to wait until a foreground job is no longer running before allowing a user to start a new job.
+What is the preferred method of implementing this kind of waiting and why is it so?
+[Note: Remember that background jobs are also in the picture while thinking of a solution.]
+
+Using the sigsuspend. The sigsuspend function temporarily replaces the current blocked set with temporarily mask and 
+then suspends the process until the receipt of a signal whose action is either to run a handler or to terminate the process.
+Sigsuspend is faster than function sleep() and can reduce the race problem of function pause(). 
+
+3. Since signals are not queued, how do you guarantee that all your children are reaped when handling SIGCHLD signals? (1pt)
+
+Because the existence of a pending signal only implies that at least one signal has been delivered 
+since the last time the process received a signal of that type.
+We can use the while loop and function (waitpid > 0) in the handler to reap as many zombie children as possible.
+
+4. The shell implementation requires that a parent adds child processes to a job list before it deletes them.
+However, it is possible that a child exits before the parent is able to do this.
+How can we ensure that a child is always added to a job list before it is deleted?
+
+We can block the SIGCHLD signals before we fork the new child. And then unblocking them only after we succeed in adding it into joblist.
+Be careful that we should unblock the SIGCHLD signal before we call the function execve. Because the children inherit the blocked set of their parents.
+
+Further exploring the code, you find that printf is being used for logging and debugging in the signal handler functions.
+Again, you know straight away that this is bad practice.
+
+5. Why is using printf a bad idea? What kind of functions can be used in signal handlers? (1pt)
+
+Because the printf can be interrupted by a signal handler and is not reentrant. We can use "write(STDOUT_FILENO, const void *buf, size_t n)" instead of using the printf
+to ensure the program safe.
+

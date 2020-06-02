@@ -1,0 +1,6 @@
+*.o
+*~
+sdriver
+runtrace
+tsh
+tshlab-handin.tar

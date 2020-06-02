@@ -1,0 +1,23 @@
+
+********************
+Grading your traces:
+********************
+
+Test your traces for correctness:
+    linux> ./driver.py
+
+Verify a trace is well written:
+    linus> ./driver.py -f <trace>
+
+To create the file to handin:
+    linux> make
+
+******
+Files:
+******
+
+csim-ref     A reference cache simulator
+driver.py    The autograder for this assignment
+Makefile     Makefile to create the handin file
+README       This file
+traces/      A directory containing the traces you will write and example traces

@@ -1,0 +1,23 @@
+
+********************
+Grading your traces:
+********************
+
+Test your traces for correctness:
+    $ ./driver.py
+
+Test a specific trace:
+    $ ./driver.py -t <1|2|3>
+
+To create the file to handin:
+    $ make
+
+******
+Files:
+******
+
+driver.py       The autograder fo this assignment
+mm_initializer  Backend executable that is part of the driver
+README          This file
+Makefile        Makefile to create the handin filel
+traces/         A directory containing the traces you will write and examples

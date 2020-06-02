@@ -1,0 +1,9 @@
+*.o
+*.bc
+csim
+test-trans
+.csim_results
+tracegen-ct
+handin.tar
+trace.*
+
